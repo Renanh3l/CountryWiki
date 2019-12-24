@@ -1,9 +1,22 @@
 import React, { Component } from 'react';
+import {ThemeProvider, createGlobalStyle} from 'styled-components'
 
 import * as styles from './styles';
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faMoon} from '@fortawesome/free-solid-svg-icons';
+
+// CSS Global
+const GlobalStyle = createGlobalStyle`
+  @import url('https://fonts.googleapis.com/css?family=Nunito+Sans:300,600,800&display=swap');
+
+  body {
+    margin: 0;
+    background-color: ${styles.backgroundColor};
+    font-family: 'Nunito Sans', sans-serif;
+    color: ${styles.textColor};
+  }
+`
 
 class App extends Component {
 
@@ -11,6 +24,7 @@ class App extends Component {
     super(props);
 
     this.state = {
+      theme: 'light',
       countries: [],
       maxLoaded: 16,
       loadingString: 'Loading...',
@@ -65,59 +79,71 @@ class App extends Component {
     
   }
 
+  changeTheme = (e) => {
+    if (this.state.theme === "light") {
+      this.setState({theme: 'dark'});
+  
+    } else {
+      this.setState({theme: 'light'});
+    }
+  }
+
 render() {
   return (
-    <styles.Wrapper>
-      <styles.Header>
-        <styles.Title>Where in the world?</styles.Title>
+    <ThemeProvider theme={{mode: this.state.theme}}>
+    <GlobalStyle />
+      <styles.Wrapper>
+        <styles.Header>
+          <styles.Title>Where in the world?</styles.Title>
 
-        <styles.ThemeSwap>
-          <a href="#"><FontAwesomeIcon icon={faMoon}/>Dark Mode</a>
-        </styles.ThemeSwap>
-        
-      </styles.Header>
+          <styles.ThemeSwap>
+            <a onClick={this.changeTheme}><FontAwesomeIcon icon={faMoon}/> {this.state.theme === "light" ? ("Dark Mode") : ("Light Mode")}</a>
+          </styles.ThemeSwap>
+          
+        </styles.Header>
 
-      <styles.searchWrapper>
-        <styles.Input placeholder="Search for a country..." onChange={this.searchCountry}>
+        <styles.searchWrapper>
+          <styles.Input placeholder="Search for a country..." onChange={this.searchCountry}>
 
-        </styles.Input>
+          </styles.Input>
 
-        <styles.Select onChange={this.filterByRegion}>
-          <option hidden={true}>Filter by region...</option>
-          <option value="Africa">Africa</option>
-          <option value="Americas">Americas</option>
-          <option value="Asia">Asia</option>
-          <option value="Europe">Europe</option>
-          <option value="Oceania">Oceania</option>
-        </styles.Select>
-      </styles.searchWrapper>
+          <styles.Select onChange={this.filterByRegion}>
+            <option hidden={true}>Filter by region...</option>
+            <option value="Africa">Africa</option>
+            <option value="Americas">Americas</option>
+            <option value="Asia">Asia</option>
+            <option value="Europe">Europe</option>
+            <option value="Oceania">Oceania</option>
+          </styles.Select>
+        </styles.searchWrapper>
 
-      <styles.countriesWrapper>
-        { (this.state.countries.length > 0) ? this.state.countries.slice(0, this.state.maxLoaded).map((country, index) => {
-          return (
-            <styles.Card onClick={()=>{this.loadCountryDetails(index)}}>
-              <styles.cardImg src={country.flag}/>
+        <styles.countriesWrapper>
+          { (this.state.countries.length > 0) ? this.state.countries.slice(0, this.state.maxLoaded).map((country, index) => {
+            return (
+              <styles.Card onClick={()=>{this.loadCountryDetails(index)}}>
+                <styles.cardImg src={country.flag}/>
 
-              <styles.cardContent>
-                <styles.cardTitle>{country.name}</styles.cardTitle>
-                <styles.cardP>Population: {country.population.toLocaleString()}</styles.cardP>
-                <styles.cardP>Region: {country.region}</styles.cardP>
-                <styles.cardP>Capital: {country.capital}</styles.cardP>
-              </styles.cardContent>
-              
-            </styles.Card>
-          )
-        }) : <span>{this.state.loadingString}</span> }
-        
-      </styles.countriesWrapper>
+                <styles.cardContent>
+                  <styles.cardTitle>{country.name}</styles.cardTitle>
+                  <styles.cardP>Population: {country.population.toLocaleString()}</styles.cardP>
+                  <styles.cardP>Region: {country.region}</styles.cardP>
+                  <styles.cardP>Capital: {country.capital}</styles.cardP>
+                </styles.cardContent>
+                
+              </styles.Card>
+            )
+          }) : <span>{this.state.loadingString}</span> }
+          
+        </styles.countriesWrapper>
 
-      <styles.Footer>
-        <styles.loadMoreButton onClick={this.loadMoreCountries}>
-          LOAD MORE...
-        </styles.loadMoreButton>
-        <p><a href="https://github.com/renanh3l" target="_blank">Criado por Renan Henrique</a></p>
-      </styles.Footer>
-    </styles.Wrapper>
+        <styles.Footer>
+          <styles.loadMoreButton onClick={this.loadMoreCountries}>
+            LOAD MORE...
+          </styles.loadMoreButton>
+          <p><a href="https://github.com/renanh3l" target="_blank">Criado por Renan Henrique</a></p>
+        </styles.Footer>
+      </styles.Wrapper>
+    </ThemeProvider>
   );
 }
 }

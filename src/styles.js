@@ -1,29 +1,33 @@
 import styled from 'styled-components';
+import theme from 'styled-theming';
 
-const lightModeBackground = "hsl(0, 0%, 98%)";
-const lightModeElements = "hsl(0, 0%, 100%)"
-const lightModeText = "hsl(200, 15%, 8%)";
+export const backgroundColor = theme('mode', {
+  light: "hsl(0, 0%, 98%)",
+  dark: "hsl(207, 26%, 17%)"
+})
 
-/*
-- Dark Blue (Dark Mode Elements): hsl(209, 23%, 22%)
-- Very Dark Blue (Dark Mode Background): hsl(207, 26%, 17%)
-- Very Dark Blue (Light Mode Text): hsl(200, 15%, 8%)
-- Dark Gray (Light Mode Input): hsl(0, 0%, 52%)
-- Very Light Gray (Light Mode Background): hsl(0, 0%, 98%)
-- White (Dark Mode Text & Light Mode Elements): hsl(0, 0%, 100%)
-*/
+export const textColor = theme('mode', {
+  light: "hsl(200, 15%, 8%)",
+  dark: "hsl(0, 0%, 100%)"
+})
+
+const elementsColor = theme('mode', {
+  light: "hsl(0, 0%, 100%)",
+  dark: "hsl(209, 23%, 22%)"
+})
 
 export const Wrapper = styled.div`
-  background-color: ${lightModeBackground};
-  color: ${lightModeText};
-  height: 100vh;
+  background-color: ${backgroundColor};
+  color: ${textColor};
+  height: 100%;
+  width: 100%;
 `
 
 export const Header = styled.header`
   width: 100%;
   height: 80px;
   border-bottom: 1px solid rgba(0, 0, 0, 10%);
-  background-color: ${lightModeElements};
+  background-color: ${elementsColor};
   display: flex;
   flex-direction: row;
   box-shadow: 0 2px 0 0 rgba(0, 0, 0, 5%);
@@ -39,6 +43,7 @@ export const Title = styled.h1`
 
 export const ThemeSwap = styled.div`
   font-weight: 600;
+  cursor: pointer;
 `
 
 export const searchWrapper = styled.div`
@@ -60,6 +65,12 @@ export const Input = styled.input`
   border: none;
   border-radius: 3px;
   box-shadow: 2px 2px 2px 2px rgba(0,0,0, 5%);
+  background-color: ${elementsColor};
+  color: ${textColor};
+
+  &::placeholder {
+    color: ${textColor};
+  }
 
   @media (max-width: 768px) {
     margin-bottom: 25px;
@@ -74,6 +85,8 @@ export const Select = styled.select`
   border: none;
   border-radius: 3px;
   box-shadow: 2px 2px 2px 2px rgba(0,0,0, 5%);
+  background-color: ${elementsColor};
+  color: ${textColor};
 
   @media (max-width: 768px) {
     width: 50%;
@@ -85,6 +98,7 @@ export const countriesWrapper = styled.div`
   flex-wrap: wrap;
   justify-content: space-around;
   margin: 0 150px 0 150px;
+  background-color: ${backgroundColor};
 `
 
 export const Card = styled.div`
@@ -131,7 +145,8 @@ export const Footer = styled.div`
   margin-top: 30px;
   margin-bottom: 30px;
   text-align: center;
-  
+  background-color: ${backgroundColor};
+
   a {
     text-decoration: none;
     color: #000;
@@ -143,8 +158,8 @@ export const loadMoreButton = styled.button`
   border: 2px solid #4189DD;
   border-radius: 5px;
   padding: 15px;
-  color: #000;
-  background-color: ${lightModeElements};
+  color: ${textColor};
+  background-color: ${elementsColor};
   font-family: 'Nunito Sans', sans-serif;
   font-weight: 800;
   font-size: 16px;
