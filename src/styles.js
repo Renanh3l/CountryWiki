@@ -16,6 +16,7 @@ const lightModeText = "hsl(200, 15%, 8%)";
 export const Wrapper = styled.div`
   background-color: ${lightModeBackground};
   color: ${lightModeText};
+  height: 100vh;
 `
 
 export const Header = styled.header`
@@ -98,6 +99,7 @@ export const Card = styled.div`
 
   &:hover {
     box-shadow: 4px 4px 15px 4px rgba(0,0,0, 30%);
+    cursor: pointer;
   }
 `
 

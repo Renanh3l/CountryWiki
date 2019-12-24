@@ -12,14 +12,57 @@ class App extends Component {
 
     this.state = {
       countries: [],
-      maxLoaded: 16
+      maxLoaded: 16,
+      loadingString: 'Loading...',
+      region: ''
     }
   }
 
   componentDidMount() {
+    this.setState({maxLoaded: 16});
     fetch("https://restcountries.eu/rest/v2/all")
       .then(res => res.json())
       .then(json => this.setState({countries: json}))
+  }
+
+  loadMoreCountries = (e) => {
+    e.preventDefault();
+    
+    this.setState({maxLoaded: this.state.maxLoaded+8});
+  };
+
+  loadCountryDetails = (index) => {
+    alert(this.state.countries[index].name)
+  }
+
+  searchCountry = (e) => {
+    let searchValue = e.target.value
+
+    if (searchValue.length > 0) {
+      this.setState({loadingString: 'No countries finded.'});
+      fetch(`https://restcountries.eu/rest/v2/name/${searchValue}`)
+        .then(res => res.json())
+        .then(json => this.setState({countries: json}));
+    } else {
+      this.setState({loadingString: 'Loading...'});
+      this.componentDidMount();
+    }
+  }
+
+  filterByRegion = (e) => {
+    let region = e.target.value;
+
+    console.log(region);
+    if (region.length > 0) {
+      this.setState({loadingString: 'No countries finded.'});
+      fetch(`https://restcountries.eu/rest/v2/region/${region}`)
+        .then(res => res.json())
+        .then(json => this.setState({countries: json}));
+    } else {
+      this.setState({loadingString: 'Loading...'});
+      this.componentDidMount();
+    }
+    
   }
 
 render() {
@@ -29,30 +72,30 @@ render() {
         <styles.Title>Where in the world?</styles.Title>
 
         <styles.ThemeSwap>
-          <FontAwesomeIcon icon={faMoon}/>Dark Mode
+          <a href="#"><FontAwesomeIcon icon={faMoon}/>Dark Mode</a>
         </styles.ThemeSwap>
         
       </styles.Header>
 
       <styles.searchWrapper>
-        <styles.Input placeholder="Search for a country...">
+        <styles.Input placeholder="Search for a country..." onChange={this.searchCountry}>
 
         </styles.Input>
 
-        <styles.Select>
+        <styles.Select onChange={this.filterByRegion}>
           <option hidden={true}>Filter by region...</option>
-          <option>Africa</option>
-          <option>America</option>
-          <option>Asia</option>
-          <option>Europe</option>
-          <option>Oceania</option>
+          <option value="Africa">Africa</option>
+          <option value="Americas">Americas</option>
+          <option value="Asia">Asia</option>
+          <option value="Europe">Europe</option>
+          <option value="Oceania">Oceania</option>
         </styles.Select>
       </styles.searchWrapper>
 
       <styles.countriesWrapper>
         { (this.state.countries.length > 0) ? this.state.countries.slice(0, this.state.maxLoaded).map((country, index) => {
           return (
-            <styles.Card>
+            <styles.Card onClick={()=>{this.loadCountryDetails(index)}}>
               <styles.cardImg src={country.flag}/>
 
               <styles.cardContent>
@@ -64,12 +107,12 @@ render() {
               
             </styles.Card>
           )
-        }) : <span>Carregando...</span> }
+        }) : <span>{this.state.loadingString}</span> }
         
       </styles.countriesWrapper>
 
       <styles.Footer>
-        <styles.loadMoreButton>
+        <styles.loadMoreButton onClick={this.loadMoreCountries}>
           LOAD MORE...
         </styles.loadMoreButton>
         <p><a href="https://github.com/renanh3l" target="_blank">Criado por Renan Henrique</a></p>
